@@ -128,9 +128,9 @@
 			xreq.send();
 
 			xreq.onreadystatechange = () => {
-				if (this.readyState == 4 && this.status == 200) {
-					console.log(this.responseText);
-					console.log(this.responseType);
+				if (xreq.readyState == 4 && xreq.status == 200) {
+					console.log(xreq.responseText);
+					console.log(xreq.responseType);
 				}
 			};
 		};
