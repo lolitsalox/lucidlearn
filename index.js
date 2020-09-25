@@ -8,6 +8,7 @@ const http = require("http");
 const {
     wakeDyno
 } = require('heroku-keep-awake');
+const { Console } = require('console');
 
 
 const db = new Client({
@@ -19,11 +20,14 @@ const db = new Client({
 
 db.connect();
 
-db.query("INSERT INTO users (id, password, email, name) VALUES (9876543210, 'alexplo13', 'drdy.business@gmail.com', 'Alex')", (err, res) => {
+db.query("SELECT * FROM users", (err, res) => {
     if (err) {
         db.end();
         throw err;
     }
+    res.rows.forEach(row => {
+        console.log(JSON.stringify(row, null, 4));
+    });
 });
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -37,6 +41,10 @@ app.get('/db', (req, res) => {
             db.end();
             throw err;
         }
+        let rows = [];
+        res_.rows.forEach(row => {
+            rows.push(JSON.stringify(row, null, 4));
+        });
         res.send(`<h1>${res_.rows.join('\n')}</h1>`);
     });
 });
