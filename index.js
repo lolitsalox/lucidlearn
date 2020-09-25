@@ -22,15 +22,6 @@ client.connect();
 //     }
 //     client.end();
 //   });
-client.query("CREATE TABLE IF NOT EXISTS test_table (uid int, name text)", (err, res) => {
-    if (err) throw err;
-    client.end();
-});
-count = 0;
-client.query("INSERT INTO test_table VALUES ($1, $2)", [count, "nisim maxim"], (err, res) => {
-    if (err) throw err;
-    client.end();
-});
 
 app.use(express.static(path.join(__dirname, "public")));
 
