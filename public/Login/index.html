@@ -8,35 +8,30 @@
 
 </head>
 <body>
-<div class="form" style="height: 473px;">
-  <div class="form-toggle"></div>
-  <div class="form-panel one">
-    <div class="form-header">
-      <h1>Account Login</h1>
-    </div>
-    <div class="form-content">
-      <form onsubmit="event.preventDefault(); valid();">
-        <div class="form-group"><label for="username">Username</label><input type="text" id="username" name="username" required="required" /></div>
-        <div class="form-group"><label for="password">Password</label><input type="password" id="password" name="password" required="required" /></div>
-        <div class="form-group"><label class="form-remember"><input type="checkbox" />Remember Me</label><a class="form-recovery" href="#">Forgot Password?</a></div>
-        <div class="form-group"><button type="submit">Log In</button></div>
-      </form>
-    </div>
-  </div>
-  <div class="form-panel two">
-    <div class="form-header">
-      <h1>Register Account</h1>
-    </div>
-    <div class="form-content">
-      <form>
-		<div class="form-group"><p>sup</p></div>
-      </form>
-    </div>
-  </div>
-</div>
-<!-- partial -->
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
-  <!-- <script  src="/Login/script.js"></script> -->
+	<body>
+		<div class="login">
+			<div class="login-screen">
+				<div class="app-title">
+					<h1>Login</h1>
+				</div>
+	
+				<div class="login-form">
+					<div class="control-group">
+					<input type="text" class="login-field" value="" placeholder="username" id="login-name">
+					<label class="login-field-icon fui-user" for="login-name"></label>
+					</div>
+	
+					<div class="control-group">
+					<input type="password" class="login-field" value="" placeholder="password" id="login-pass">
+					<label class="login-field-icon fui-lock" for="login-pass"></label>
+					</div>
+	
+					<a class="btn btn-primary btn-large btn-block" href="#">login</a>
+					<a class="login-link" href="#">Lost your password?</a>
+				</div>
+			</div>
+		</div>
+	</body>
 	<script>
 		function valid() {
 			const inputUsername = username.value,
