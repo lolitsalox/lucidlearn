@@ -20,8 +20,10 @@
 		}
 
 		.login {
-			margin: 20px auto;
+			position: absolute;
 			width: 300px;
+			top: calc(50% - 149.44px);
+			left: calc(50% - 150px);
 		}
 
 		.login-screen {
@@ -75,6 +77,7 @@
 			display: block;
 			width: 250px;
 			margin: 0 auto;
+			cursor: pointer;
 		}
 
 		.btn:hover {
@@ -126,7 +129,7 @@
 
 			xreq.onreadystatechange = () => {
 				if (this.readyState == 4 && this.status == 200) {
-					alert(xreq.responseText);
+					alert(xreq.response.toString());
 				}
 			};
 		};

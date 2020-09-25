@@ -8,7 +8,7 @@ const http = require("http");
 const {
     wakeDyno
 } = require('heroku-keep-awake');
-const { Console } = require('console');
+
 
 
 const db = new Client({
@@ -46,6 +46,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, '/public/Login/index.html')));
+
 app.get('/db', (req, res) => {
     db.query("SELECT * FROM users", (err, res_) => {
         if (err) {
@@ -59,13 +60,14 @@ app.get('/db', (req, res) => {
         res.send(`<h1>${rows.join('\n')}</h1>`);
     });
 });
+
 app.get("/validate", (request, response) => {
     db.query("SELECT * FROM users WHERE name=$1 and password=$2", [request.query.username, request.query.password], (err, res) => {
         if (err) throw err;
         if (res.rowCount > 0) {
-            response.sendStatus(200).send("sup bitch how ya doin'");
+            response.send("sup bitch how ya doin'");
         } else {
-            response.sendStatus(200).send("who you");
+            response.send("who you");
         }
     });
 });
