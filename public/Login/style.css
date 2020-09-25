@@ -41,7 +41,7 @@ body {
   right: 60px;
   background: #ffffff;
   width: 60px;
-  height: 60px;
+  /* height: 60px; */
   border-radius: 100%;
   -webkit-transform-origin: center;
           transform-origin: center;
