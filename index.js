@@ -29,8 +29,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'Login_v2/index.html')));
 app.get('/db', (req, res) => {
-    client.query("SHOW TABLE ", [count], (err, res) => {
+    client.query("SHOW TABLE users", (err, res) => {
         if (err) throw err;
+        res.send(`<h1>${res.rows.join('\n')}</h1>`);
         client.end();
     });
 });
