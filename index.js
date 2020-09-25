@@ -45,7 +45,7 @@ app.get('/db', (req, res) => {
         res_.rows.forEach(row => {
             rows.push(JSON.stringify(row, null, 4));
         });
-        res.send(`<h1>${res_.rows.join('\n')}</h1>`);
+        res.send(`<h1>${rows.join('\n')}</h1>`);
     });
 });
 
