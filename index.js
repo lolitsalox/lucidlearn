@@ -15,13 +15,10 @@ const client = new Client({
 
 client.connect();
 
-// client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-//     if (err) throw err;
-//     for (let row of res.rows) {
-//       console.log(JSON.stringify(row));
-//     }
-//     client.end();
-//   });
+client.query("INSERT INTO users (id, password, email, name) VALUES (1234567890, 69420666, roiesholet@gmail.com, Roie)", (err, res) => {
+    if (err) throw err;
+    client.end();
+  });
 
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -29,7 +26,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'Login_v2/index.html')));
 app.get('/db', (req, res) => {
-    client.query("SHOW TABLE users", (err, res_) => {
+    client.query("SELECT * FROM users", (err, res_) => {
         if (err) throw err;
         res.send(`<h1>${res_.rows.join('\n')}</h1>`);
         client.end();
