@@ -129,7 +129,7 @@
 
 			xreq.onreadystatechange = () => {
 				if (this.readyState == 4 && this.status == 200) {
-					alert(xreq.response.toString());
+					alert(xreq.response);
 				}
 			};
 		};
