@@ -1,45 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" >
 <head>
-	<title>Login</title>
-	<link rel="stylesheet" type="text/css" href="/Login/css/style.css">
-	<link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
-	<script src="https://kit.fontawesome.com/a81368914c.js"></script>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>CodePen - Login form</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel="stylesheet" href="./style.css">
+
 </head>
 <body>
-	<img class="wave" src="/Login/img/wave.png">
-	<div class="container">
-		<div class="img">
-			<img src="/Login/img/bg.svg">
-		</div>
-		<div class="login-content">
-			<form action="/Login/index.html">
-				<img src="/Login/img/avatar.svg">
-				<h2 class="title">Welcome</h2>
-           		<div class="input-div one">
-           		   <div class="i">
-           		   		<i class="fas fa-user"></i>
-           		   </div>
-           		   <div class="div">
-           		   		<h5>Username</h5>
-           		   		<input type="text" class="input">
-           		   </div>
-           		</div>
-           		<div class="input-div pass">
-           		   <div class="i"> 
-           		    	<i class="fas fa-lock"></i>
-           		   </div>
-           		   <div class="div">
-           		    	<h5>Password</h5>
-           		    	<input type="password" class="input">
-            	   </div>
-            	</div>
-            	<a href="#">Forgot Password?</a>
-            	<input type="submit" class="btn" value="Login">
-            </form>
-        </div>
+<div class="form">
+  <div class="form-toggle"></div>
+  <div class="form-panel one">
+    <div class="form-header">
+      <h1>Account Login</h1>
     </div>
-    <script type="text/javascript" src="/Login/js/main.js"></script>
+    <div class="form-content">
+      <form onsubmit="event.preventDefault(); valid();">
+        <div class="form-group"><label for="username">Username</label><input type="text" id="username" name="username" required="required" /></div>
+        <div class="form-group"><label for="password">Password</label><input type="password" id="password" name="password" required="required" /></div>
+        <div class="form-group"><label class="form-remember"><input type="checkbox" />Remember Me</label><a class="form-recovery" href="#">Forgot Password?</a></div>
+        <div class="form-group"><button type="submit">Log In</button></div>
+      </form>
+    </div>
+  </div>
+  <div class="form-panel two">
+    <div class="form-header">
+      <h1>Register Account</h1>
+    </div>
+    <div class="form-content">
+    </div>
+  </div>
+</div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script><script  src="./script.js"></script>
+	<script>
+		function valid() {
+			console.log(username.value);
+		};
+	</script>
 </body>
 </html>
