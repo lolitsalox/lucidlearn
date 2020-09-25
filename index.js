@@ -19,7 +19,7 @@ const db = new Client({
 
 db.connect();
 
-db.query("INSERT INTO users (id, password, email, name) VALUES (1234567890, '69420666', 'roiesholet@gmail.com', 'Roie')", (err, res) => {
+db.query("INSERT INTO users (id, password, email, name) VALUES (9876543210, 'alexplo13', 'drdy.business@gmail.com', 'Alex')", (err, res) => {
     if (err) {
         db.end();
         throw err;
