@@ -7,7 +7,7 @@ const { wakeDyno } = require('heroku-keep-awake');
 
 
 const client = new Client({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: "postgres://dzmnmictdmtiaa:cbb90ed9cb8a3d088a862ef4da189c3d4e2602482e1796defb36bdd246638e17@ec2-52-212-157-46.eu-west-1.compute.amazonaws.com:5432/users",
     ssl: {
       rejectUnauthorized: false
     }
@@ -26,10 +26,9 @@ client.query("CREATE TABLE IF NOT EXISTS test_table (uid int, name text)", (err,
     if (err) throw err;
     client.end();
 });
-count = 1;
-client.query("INSERT INTO test_table VALUES ($1, $2)", (count++, "nisim maxim"), (err, res) => {
+count = 0;
+client.query("INSERT INTO test_table VALUES ($1, $2)", [count, "nisim maxim"], (err, res) => {
     if (err) throw err;
-    console.log(count);
     client.end();
 });
 
@@ -37,6 +36,13 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/db', (req, res) => {
+    res.send(`<h1>count: ${count++}</h1>`);
+    client.query("UPDATE test_table SET uid=$1 WHERE name='nisim maxim'", [count], (err, res) => {
+        if (err) throw err;
+        client.end();
+    });
+});
 
 
 const PORT = process.env.PORT || 8080;
