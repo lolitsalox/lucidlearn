@@ -15,7 +15,7 @@ const client = new Client({
 
 client.connect();
 
-client.query("INSERT INTO users (id, password, email, name) VALUES (1234567890, 69420666, roiesholet@gmail.com, Roie)", (err, res) => {
+client.query("INSERT INTO users (id, password, email, name) VALUES (1234567890, '69420666', 'roiesholet@gmail.com', 'Roie')", (err, res) => {
     if (err) throw err;
     client.end();
   });
