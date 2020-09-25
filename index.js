@@ -36,6 +36,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'Login_v2/index.html')));
 app.get('/db', (req, res) => {
     res.send(`<h1>count: ${count++}</h1>`);
     client.query("UPDATE test_table SET uid=$1 WHERE name='nisim maxim'", [count], (err, res) => {
