@@ -30,6 +30,17 @@ db.query("SELECT * FROM users", (err, res) => {
     });
 });
 
+function generateID() {
+    db.query("SELECT id FROM users", (err, res) => {
+        const ids = [];
+        res.rows.forEach(id => ids.push(id));
+    });
+    do {
+        let id = Math.random() * 19;
+    } while (ids.includes(id));
+    return id;
+};
+
 app.use(express.static(path.join(__dirname, "public")));
 
 
@@ -48,7 +59,16 @@ app.get('/db', (req, res) => {
         res.send(`<h1>${rows.join('\n')}</h1>`);
     });
 });
-
+app.get("/validate", (request, response) => {
+    db.query("SELECT * FROM users WHERE name=$1 and password=$2", [request.query.username, request.query.password], (err, res) => {
+        if (err) throw err;
+        if (res.rowCount > 0) {
+            response.sendStatus(200).send("sup bitch how ya doin'");
+        } else {
+            response.sendStatus(200).send("who you");
+        }
+    });
+});
 
 const PORT = process.env.PORT || 8080;
 const DYNO_URL = 'https://lucidlearn.herokuapp.com';

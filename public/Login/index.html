@@ -38,7 +38,17 @@
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script><script  src="/Login/script.js"></script>
 	<script>
 		function valid() {
-			alert(username.value);
+			const inputUsername = username.value,
+			inputPassword = password.value;
+			const xreq = new XMLHttpRequest();
+			xreq.open("get", `https://lucidlearn.tk/validate?username=${inputUsername}&password=${inputPassword}`);
+			xreq.send();
+
+			xreq.onreadystatechange = () => {
+				if (this.readyState == 4 && this.status == 200) {
+					alert(xreq.responseText);
+				}
+			};
 		};
 	</script>
 </body>
