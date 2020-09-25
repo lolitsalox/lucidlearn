@@ -7,7 +7,7 @@ const { wakeDyno } = require('heroku-keep-awake');
 
 
 const client = new Client({
-    connectionString: "postgres://dzmnmictdmtiaa:cbb90ed9cb8a3d088a862ef4da189c3d4e2602482e1796defb36bdd246638e17@ec2-52-212-157-46.eu-west-1.compute.amazonaws.com:5432/users",
+    connectionString: process.env.DATABASE_URL,
     ssl: {
       rejectUnauthorized: false
     }
