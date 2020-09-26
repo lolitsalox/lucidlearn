@@ -32,11 +32,13 @@ db.query("SELECT * FROM users", (err, res) => {
 
 function generateID() {
     db.query("SELECT id FROM users", (err, res) => {
+        if (err) throw err;
         const ids = [];
         res.rows.forEach(id => ids.push(id));
     });
+    let id;
     do {
-        let id = Math.random() * 19;
+        id = Math.random() * 19;
     } while (ids.includes(id));
     return id;
 };
