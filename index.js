@@ -48,6 +48,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, '/public/Login/index.html')));
+app.get('/arc-sw.js', (req, res) => res.sendFile(path.join(__dirname, '/public/arc-sw.js')));
 
 app.get('/db', (req, res) => {
     db.query("SELECT * FROM users", (err, res_) => {
