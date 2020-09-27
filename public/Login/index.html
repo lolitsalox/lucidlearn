@@ -105,16 +105,16 @@
 
 				<div class="login-form">
 					<div class="control-group">
-						<input type="text" class="login-field" value="" placeholder="username" id="username">
+						<input type="text" class="login-field" value="" placeholder="שם משתמש" id="username"> <!-- check if the person puts an email inside and then if he does make the request url to be valid to the email-->
 						<label class="login-field-icon fui-user" for="username"></label>
 					</div>
 
 					<div class="control-group">
-						<input type="password" class="login-field" value="" placeholder="password" id="password">
+						<input type="password" class="login-field" value="" placeholder="סיסמה" id="password">
 						<label class="login-field-icon fui-lock" for="password"></label>
 					</div>
 
-					<a class="btn btn-primary btn-large btn-block" onclick="valid()">login</a>
+					<a class="btn btn-primary btn-large btn-block" onclick="valid()">כניסה</a>
 					<a class="login-link" href="/accounts">Dont have an account?</a>
 				</div>
 			</div>
@@ -126,7 +126,7 @@
 				inputPassword = password.value;
 			
 			const xreq = new XMLHttpRequest();
-			
+
 			xreq.open("get", `https://lucidlearn.tk/validate?username=${inputUsername}&password=${inputPassword}`);
 			
 			xreq.onreadystatechange = () => {
