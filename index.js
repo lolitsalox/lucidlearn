@@ -65,7 +65,7 @@ app.get('/db', (req, res) => {
 });
 
 app.get("/validate", (request, response) => {
-    db.query("SELECT * FROM users WHERE name=$1 and password=$2", [request.query.username, request.query.password], (err, res) => {
+    db.query("SELECT * FROM users WHERE username=$1 and password=$2", [request.query.username, request.query.password], (err, res) => {
         if (err) throw err;
         if (res.rowCount > 0) {
             response.send("sup bitch how ya doin'");
