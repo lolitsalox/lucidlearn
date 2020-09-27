@@ -76,7 +76,7 @@ app.get("/validate", (request, response) => {
 });
 app.post("/create_user", (request, response) => { // lucidlearn.tk/user_with
     for (const item in request.query) {
-        console.log(item);
+        console.log(item, typeof(item));
     }
     response.sendStatus(200);
 });
