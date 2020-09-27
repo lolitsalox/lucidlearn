@@ -46,10 +46,6 @@
 			margin-bottom: 30px;
 		}
 
-		.control-group:has(#first-name, #last-name) {
-			display: inline-block;
-		}
-
 		.control-group::placeholder {
 			transition: opacity 0.5s ease-in-out;
 		}
@@ -148,6 +144,12 @@
 		</div>
 	</body>
 	<script>
+
+		const controlGroup = document.getElementsByClassName("control-group");
+		for (let i = 0; i < 2; i++) {
+			controlGroup.item(i).style.display = "inline-block";
+		}
+
 		function valid() {
 			const inputUsername = username.value,
 				inputPassword = password.value;
