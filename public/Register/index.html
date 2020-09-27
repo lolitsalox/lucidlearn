@@ -22,10 +22,9 @@
 
 		.register {
 			position: absolute;
-			width: 550px;
-			/* 520px */
-			top: calc(50% - 227.44px);
-			left: calc(50% - 225px);
+			width: 300px;
+			top: calc(50% - 149.88px);
+			left: calc(50% - 150px);
 		}
 
 		.register-screen {
@@ -46,11 +45,6 @@
 		.control-group {
 			margin-bottom: 5px;
 		}
-
-		.control-group:first-child {
-			margin-right: 20px;
-		}
-
 		.control-group::placeholder {
 			transition: opacity 0.5s ease-in-out;
 		}
@@ -154,7 +148,7 @@
 		for (let i = 0; i < 2; i++) {
 			controlGroup.item(i).style.display = "inline-block";
 			controlGroup.item(i).style.marginBottom = "0";
-			controlGroup.item(i).firstChild.style.width = "122.5px";
+			controlGroup.item(i).firstElementChild.style.width = "122.5px";
 		}
 
 		function valid() {
