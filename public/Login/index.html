@@ -45,7 +45,7 @@
 		.control-group {
 			margin-bottom: 10px;
 		}
-		
+
 		input::placeholder {
 			transition: opacity 0.2s ease-in-out;
 		}
@@ -135,7 +135,7 @@
 			
 			const xreq = new XMLHttpRequest();
 
-			xreq.open("get", `https://lucidlearn.tk/validate?username=${inputUsername}&password=${inputPassword}`);
+			xreq.open("post", `https://lucidlearn.tk/validate?username=${inputUsername}&password=${inputPassword}`);
 			
 			xreq.onreadystatechange = () => {
 				if (xreq.readyState == 4 && xreq.status == 200) {

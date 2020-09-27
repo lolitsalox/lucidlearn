@@ -45,7 +45,6 @@ function generateID() {
 
 app.use(express.static(path.join(__dirname, "public")));
 
-
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, '/public/Login/index.html')));
 app.get('/register', (req, res) => res.sendFile(path.join(__dirname, '/public/Register/index.html')));
@@ -68,17 +67,23 @@ app.get('/db', (req, res) => {
 app.get("/validate", (request, response) => {
     db.query("SELECT * FROM users WHERE username=$1 and password=$2", [request.query.username, request.query.password], (err, res) => {
         if (err) throw err;
-        if (res.rowCount > 0) { // MAKE SURE THE REQUEST IS COMING FROM lucidlearn.tk/register
+        if (res.rowCount > 0) { // MAKE SURE THE REQUEST IS COMING FROM lucidlearn.tk/register lucidlearn.tk/validate
             response.send("sup bitch how ya doin'");
         } else {
             response.send("who you");
         }
     });
 });
-
-app.get("/h1ij84y5kj7ol4o26", (request, response) => {
-    // add a new account to the database and MAKE SURE THE REQUEST IS COMING FROM lucidlearn.tk/register
+app.post("/create_user", (request, response) => { // lucidlearn.tk/user_with
+    const field = Object.getOwnPropertyNames(request.query)[0];
+    const input = eval(`request.query.${field}`);
+    db.query("SELECT * FROM users WHERE $1=$2", [field, input], (err, res) => {
+        if (err) throw err;
+        if (res.rowCount > 0) response.send("true");
+        else response.send("false");
+    });
 });
+
 
 const PORT = process.env.PORT || 8080;
 const DYNO_URL = 'https://lucidlearn.herokuapp.com';
