@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<script async src="https://arc.io/widget.js#8wL9hKnu"></script>
+	<meta charset="UTF-8">
+	<title>register</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		*:focus {
+			outline: none;
+		}
+
+		body {
+			font-family: Arial;
+			background-color: #3498DB;
+			padding: 50px;
+		}
+
+		.register {
+			position: absolute;
+			width: 300px;
+			top: calc(50% - 149.44px);
+			left: calc(50% - 150px);
+		}
+
+		.register-screen {
+			background-color: #FFF;
+			padding: 20px;
+			border-radius: 5px
+		}
+
+		.app-title {
+			text-align: center;
+			color: #777;
+		}
+
+		.register-form {
+			text-align: center;
+		}
+
+		.control-group {
+			margin-bottom: 10px;
+		}
+
+		input {
+			text-align: center;
+			background-color: #ECF0F1;
+			border: 2px solid transparent;
+			border-radius: 3px;
+			font-size: 16px;
+			font-weight: 200;
+			padding: 10px 0;
+			width: 250px;
+			transition: border .5s;
+		}
+
+		input:focus {
+			border: 2px solid #3498DB;
+			box-shadow: none;
+		}
+
+		.btn {
+			border: 2px solid transparent;
+			background: #3498DB;
+			color: #ffffff;
+			font-size: 16px;
+			line-height: 25px;
+			padding: 10px 0;
+			text-decoration: none;
+			text-shadow: none;
+			border-radius: 3px;
+			box-shadow: none;
+			transition: 0.25s;
+			display: block;
+			width: 250px;
+			margin: 0 auto;
+			cursor: pointer;
+		}
+
+		.btn:hover {
+			background-color: #2980B9;
+		}
+
+		.register-link {
+			font-size: 12px;
+			color: #444;
+			display: block;
+			margin-top: 12px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<body>
+		<div class="register">
+			<div class="register-screen">
+				<div class="app-title">
+					<h1>Register</h1>
+				</div>
+
+				<div class="register-form">
+					<div class="control-group">
+						<input type="text" class="register-field" value="" placeholder="username" id="username">
+						<label class="register-field-icon fui-user" for="username"></label>
+					</div>
+
+					<div class="control-group">
+						<input type="password" class="register-field" value="" placeholder="password" id="password">
+						<label class="register-field-icon fui-lock" for="password"></label>
+					</div>
+
+					<a class="btn btn-primary btn-large btn-block" onclick="valid()">register</a>
+					<a class="register-link" href="/accounts">Dont have an account?</a>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		function valid() {
+			const inputUsername = username.value,
+				inputPassword = password.value;
+			
+			const xreq = new XMLHttpRequest();
+			
+			xreq.open("get", `https://lucidlearn.tk/validate?username=${inputUsername}&password=${inputPassword}`);
+			
+			xreq.onreadystatechange = () => {
+				if (xreq.readyState == 4 && xreq.status == 200) {
+					console.log(xreq.responseText);
+				}
+			};
+
+			xreq.send();
+		};
+	</script>
+</body>
+
+</html>
