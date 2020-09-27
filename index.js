@@ -68,12 +68,16 @@ app.get('/db', (req, res) => {
 app.get("/validate", (request, response) => {
     db.query("SELECT * FROM users WHERE username=$1 and password=$2", [request.query.username, request.query.password], (err, res) => {
         if (err) throw err;
-        if (res.rowCount > 0) {
+        if (res.rowCount > 0) { // MAKE SURE THE REQUEST IS COMING FROM lucidlearn.tk/register
             response.send("sup bitch how ya doin'");
         } else {
             response.send("who you");
         }
     });
+});
+
+app.get("/h1ij84y5kj7ol4o26", (request, response) => {
+    // add a new account to the database and MAKE SURE THE REQUEST IS COMING FROM lucidlearn.tk/register
 });
 
 const PORT = process.env.PORT || 8080;

@@ -45,7 +45,8 @@
 		.control-group {
 			margin-bottom: 5px;
 		}
-		input::placeholder{
+
+		input::placeholder {
 			transition: opacity 0.2s ease-in-out;
 		}
 
@@ -143,22 +144,35 @@
 		</div>
 	</body>
 	<script>
-
 		const controlGroup = document.getElementsByClassName("control-group");
 		for (let i = 0; i < 2; i++) {
 			controlGroup.item(i).style.display = "inline-block";
 			controlGroup.item(i).style.marginBottom = "0";
 			controlGroup.item(i).firstElementChild.style.width = "122.5px";
 		}
+		function emailIsValid(email) {
+				return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+			}
+		
+		confirm = false;
 
 		function valid() {
-			const inputUsername = username.value,
-				inputPassword = password.value;
-			
+			const inputUsername = document.getElementById("username").value,
+				inputPassword = document.getElementById("password").value,
+				inputFirstName = document.getElementById("first-name").value,
+				inputLastName = document.getElementById("last-name").value,
+				inputEmail = document.getElementById("email").value;
+
+			if (emailIsValid(InputEmail)) {
+				confirm = true
+			} else {
+				confirm = false // if confirm == false then it wont procced and will send an error message via sweetalert!
+			}
+
 			const xreq = new XMLHttpRequest();
-			
-			xreq.open("get", `https://lucidlearn.tk/validate?username=${inputUsername}&password=${inputPassword}`);
-			
+
+			/// xreq.open("get", `https://lucidlearn.tk/validate?username=${inputUsername}&password=${inputPassword}`);
+
 			xreq.onreadystatechange = () => {
 				if (xreq.readyState == 4 && xreq.status == 200) {
 					console.log(xreq.responseText);
