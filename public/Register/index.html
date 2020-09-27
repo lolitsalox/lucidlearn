@@ -174,12 +174,12 @@
 				return;
 			}
 			
-			if (!(/\w{2,12}/.test(inputFirstName.trim()))) {
+			if (!(/[A-Za-zא-ת]{2,12}/.test(inputFirstName.trim()))) {
 				alert("Invalid first name!");
 				return;
 			}
 
-			if (!(/\w{2,12}/.test(inputLastName.trim()))) {
+			if (!(/[A-Za-zא-ת]{2,12}/.test(inputLastName.trim()))) {
 				alert("Invalid last name!");
 				return; // ok im still talking so u can continue no
 			}
