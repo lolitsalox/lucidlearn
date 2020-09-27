@@ -124,15 +124,18 @@
 		function valid() {
 			const inputUsername = username.value,
 				inputPassword = password.value;
+			
 			const xreq = new XMLHttpRequest();
+			
 			xreq.open("get", `https://lucidlearn.tk/validate?username=${inputUsername}&password=${inputPassword}`);
-			xreq.send();
-
+			
 			xreq.onreadystatechange = () => {
 				if (xreq.readyState == 4 && xreq.status == 200) {
 					console.log(xreq.responseText);
 				}
 			};
+
+			xreq.send();
 		};
 	</script>
 </body>
