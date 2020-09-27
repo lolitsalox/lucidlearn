@@ -45,7 +45,14 @@
 		.control-group {
 			margin-bottom: 10px;
 		}
+		
+		input::placeholder {
+			transition: opacity 0.2s ease-in-out;
+		}
 
+		input:focus::placeholder {
+			opacity: 0;
+		}
 		input {
 			text-align: center;
 			background-color: #ECF0F1;
