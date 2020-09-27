@@ -46,20 +46,16 @@
 			margin-bottom: 30px;
 		}
 
+		.control-group:has(#first-name, #last-name) {
+			display: inline-block;
+		}
+
 		.control-group::placeholder {
 			transition: opacity 0.5s ease-in-out;
 		}
 
 		.control-group:active::placeholder {
 			opacity: 0;
-		}
-
-		#first-name {
-			display: inline-block;
-		}
-
-		#last-name {
-			display: inline-block;
 		}
 
 		input {
