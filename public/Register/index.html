@@ -190,6 +190,12 @@
 			if (confirm) {
 				const xreq = new XMLHttpRequest();
 				xreq.open("post", `${window.location.origin}/create_user?first-name=${inputFirstName}&last-name=${inputLastName}&username=${inputUsername}&password=${inputPassword}&email=${inputEmail}`);
+				xreq.onreadystatechange = () => {
+					if (this.readyState == 4 && this.status == 200) {
+						console.log(this.responseText)
+					}
+				};
+				xreq.send();
 			}
 
 

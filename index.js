@@ -75,13 +75,10 @@ app.get("/validate", (request, response) => {
     });
 });
 app.post("/create_user", (request, response) => { // lucidlearn.tk/user_with
-    const field = Object.getOwnPropertyNames(request.query)[0];
-    const input = eval(`request.query.${field}`);
-    db.query("SELECT * FROM users WHERE $1=$2", [field, input], (err, res) => {
-        if (err) throw err;
-        if (res.rowCount > 0) response.send("true");
-        else response.send("false");
-    });
+    for (const item in request.query) {
+        console.log(item);
+    }
+    response.sendStatus(200);
 });
 
 
