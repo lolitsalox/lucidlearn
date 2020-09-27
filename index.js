@@ -8,7 +8,8 @@ const http = require("http");
 const {
     wakeDyno
 } = require('heroku-keep-awake');
-const { query } = require('express');
+const bcrypt = require("bcrypt");
+
 
 
 
@@ -33,15 +34,15 @@ db.query("SELECT * FROM users", (err, res) => {
 
 function generateID() {
     db.query("SELECT id FROM users", (err, res) => {
-        if (err) throw err;
-        const ids = [];
-        res.rows.forEach(id => ids.push(id));
+        if (err) console.log(err.stack);
+        else {
+            let id;
+            do {
+                id = Math.random() * 19;
+            } while (res.rows.includes(id));
+            return id;
+        }
     });
-    let id;
-    do {
-        id = Math.random() * 19;
-    } while (ids.includes(id));
-    return id;
 };
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -65,6 +66,13 @@ app.get('/db', (req, res) => {
     });
 });
 
+function userWith(field, input) {
+    db.query("SELECT * FROM users WHERE $1=$2", [field, input], (err, res) => {
+        if (err) throw err;
+        else return res.rowCount > 0;
+    });
+}
+
 app.get("/validate", (request, response) => {
     db.query("SELECT * FROM users WHERE username=$1 and password=$2", [request.query.username, request.query.password], (err, res) => {
         if (err) throw err;
@@ -76,11 +84,21 @@ app.get("/validate", (request, response) => {
     });
 });
 app.post("/create_user", (request, response) => { // lucidlearn.tk/user_with
-    
-    for (const item in request.query) {
-        console.log(`${item}: ${request.query[item]}`);
-    }
-    response.sendStatus(200);
+    const inputFirstName = request.query["first-name"],
+    inputLastName = request.query["last-name"],
+    inputEmail = request.query["email"],
+    inputUsername = request.query["username"],
+    inputPassword = request.query["password"];
+
+    if (userWith("email", inputEmail)) return response.json({"error": "This email is already in use!"});
+    else if (userWith("username", inputUsername)) return response.json({"error": "This username is already in use!"});
+
+    bcrypt.hash(inputPassword, 12, (err, hashed) => {
+        db.query("INSERT INTO users (id, first_name, last_name, email, username, password) VALUES ($1, $2, $3, $4, $5, $6)", [generateID(), inputFirstName, inputLastName, inputEmail, inputUsername, hashed], (err, res) => {
+            if (err) console.log(err.stack);
+            else response.sendStatus(200);
+        });
+    });
 });
 
 

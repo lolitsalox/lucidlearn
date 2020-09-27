@@ -181,7 +181,7 @@
 
 			if (!(/[A-Za-zא-ת]{2,12}/.test(inputLastName.trim()))) {
 				alert("Invalid last name!");
-				return; // ok im still talking so u can continue no
+				return;
 			}
 
 
@@ -189,7 +189,7 @@
 			xreq.open("post", `${window.location.origin}/create_user?first-name=${inputFirstName}&last-name=${inputLastName}&username=${inputUsername}&password=${inputPassword}&email=${inputEmail}`);
 			xreq.onreadystatechange = () => {
 				if (this.readyState == 4 && this.status == 200) {
-					console.log(this.responseText)
+					console.log(this.responseText);
 				}
 			};
 			xreq.send();
