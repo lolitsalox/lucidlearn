@@ -138,35 +138,22 @@
 					</div>
 
 					<a class="btn" onclick="valid()">הרשמה</a>
-					<a class="register-link" href="/login">כבר יש לך משתמש? היכנס</a>
-					<!--we can make "free plans" or exclusive plans therefore everyone can signup (students as well! BUT we have to make sure that the students dont sign up as teachers!!!)-->
+					<a class="register-link" href="/login">כבר יש לך משתמש? היכנס</a> <!--we can make "free plans" or exclusive plans therefore everyone can signup (students as well! BUT we have to make sure that the students dont sign up as teachers!!!)-->
 				</div>
 			</div>
 		</div>
 	</body>
 	<script>
-		const jsSHA = require("jssha");
-		
 		const controlGroup = document.getElementsByClassName("control-group");
 		for (let i = 0; i < 2; i++) {
 			controlGroup.item(i).style.display = "inline-block";
 			controlGroup.item(i).style.marginBottom = "0";
 			controlGroup.item(i).firstElementChild.style.width = "122.5px";
 		}
-
 		function emailIsValid(email) {
-			return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) // checks if the syntax is _@_._ (e.g something@something.com)
-		}
-
-		function hash(obj) {
-			var hashObj = new jsSHA("SHA-512", "TEXT", {
-				numRounds: 1
-			});
-			hashObj.update(obj);
-			var hash = hashObj.getHash("HEX");
-			return hash;
-		}
-
+				return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) // checks if the syntax is _@_._ (e.g something@something.something)
+			}
+		
 		confirm = false;
 
 		function valid() {
@@ -176,26 +163,23 @@
 				inputLastName = document.getElementById("last-name").value,
 				inputEmail = document.getElementById("email").value;
 
-			//if (emailIsValid(InputEmail)) {
-			//	confirm = true
-			//} else {
-			//	confirm = false // if confirm == false then it wont procced and will send an error message via sweetalert!
-			//}
-
-			console.log(hash(inputPassword));
-
+			if (emailIsValid(InputEmail)) {
+				confirm = true
+			} else {
+				confirm = false // if confirm == false then it wont procced and will send an error message via sweetalert!
+			}
 
 			const xreq = new XMLHttpRequest();
 
-			// xreq.open("get", `https://lucidlearn.tk/validate?username=${inputUsername}&password=${inputPassword}`);
+			/// xreq.open("get", `https://lucidlearn.tk/validate?username=${inputUsername}&password=${inputPassword}`);
 
-			// xreq.onreadystatechange = () => {
-			// 	if (xreq.readyState == 4 && xreq.status == 200) {
-			// 		console.log(xreq.responseText);
-			// 	}
-			// };
+			xreq.onreadystatechange = () => {
+				if (xreq.readyState == 4 && xreq.status == 200) {
+					console.log(xreq.responseText);
+				}
+			};
 
-			// xreq.send();
+			xreq.send();
 		};
 	</script>
 </body>
