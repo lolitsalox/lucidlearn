@@ -8,6 +8,7 @@ const http = require("http");
 const {
     wakeDyno
 } = require('heroku-keep-awake');
+const { query } = require('express');
 
 
 
@@ -75,8 +76,9 @@ app.get("/validate", (request, response) => {
     });
 });
 app.post("/create_user", (request, response) => { // lucidlearn.tk/user_with
+    
     for (const item in request.query) {
-        console.log(item, typeof(item));
+        console.log(`${item}: ${request.query[item]}`);
     }
     response.sendStatus(200);
 });
