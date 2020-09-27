@@ -159,21 +159,7 @@
 				inputLastName = document.getElementById("last-name").value,
 				inputEmail = document.getElementById("email").value;
 
-			if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputEmail)) {
-				alert("Invalid email");
-				return;
-			}
-
-			if (!/^(?=.{4,16}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/.test(inputUsername)) {
-				alert("Invalid username");
-				return;
-			}
-
-			if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,32}$/.test(inputPassword)) {
-				alert("Invalid password!");
-				return;
-			}
-			
+				
 			if (!(/[A-Za-zא-ת]{2,12}/.test(inputFirstName.trim()))) {
 				alert("Invalid first name!");
 				return;
@@ -184,6 +170,21 @@
 				return;
 			}
 
+			if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputEmail)) {
+				alert("Invalid email!");
+				return;
+			}
+
+			if (!/^(?=.{4,16}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/.test(inputUsername)) {
+				alert("Invalid username!");
+				return;
+			}
+
+			if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,32}$/.test(inputPassword)) {
+				alert("Invalid password!");
+				return;
+			}
+			
 
 			const xreq = new XMLHttpRequest();
 			xreq.open("post", `${window.location.origin}/create_user?first-name=${inputFirstName}&last-name=${inputLastName}&username=${inputUsername}&password=${inputPassword}&email=${inputEmail}`);
