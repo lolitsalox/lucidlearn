@@ -152,8 +152,6 @@
 			controlGroup.item(i).firstElementChild.style.width = "122.5px";
 		}
 
-		confirm = false;
-
 		function valid() {
 			const inputUsername = document.getElementById("username").value,
 				inputPassword = document.getElementById("password").value,
@@ -187,16 +185,14 @@
 			}
 
 
-			if (confirm) {
-				const xreq = new XMLHttpRequest();
-				xreq.open("post", `${window.location.origin}/create_user?first-name=${inputFirstName}&last-name=${inputLastName}&username=${inputUsername}&password=${inputPassword}&email=${inputEmail}`);
-				xreq.onreadystatechange = () => {
-					if (this.readyState == 4 && this.status == 200) {
-						console.log(this.responseText)
-					}
-				};
-				xreq.send();
-			}
+			const xreq = new XMLHttpRequest();
+			xreq.open("post", `${window.location.origin}/create_user?first-name=${inputFirstName}&last-name=${inputLastName}&username=${inputUsername}&password=${inputPassword}&email=${inputEmail}`);
+			xreq.onreadystatechange = () => {
+				if (this.readyState == 4 && this.status == 200) {
+					console.log(this.responseText)
+				}
+			};
+			xreq.send();
 
 
 
