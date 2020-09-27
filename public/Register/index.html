@@ -23,6 +23,7 @@
 		.register {
 			position: absolute;
 			width: 550px;
+			/* 520px */
 			top: calc(50% - 227.44px);
 			left: calc(50% - 225px);
 		}
@@ -43,7 +44,7 @@
 		}
 
 		.control-group {
-			margin-bottom: 30px;
+			margin-bottom: 5px;
 		}
 
 		.control-group:first-child {
@@ -126,7 +127,7 @@
 						<label for="last-name"></label>
 					</div>
 
-					<div class="control-group">
+					<div class="control-group" style="margin: 20px 0;">
 						<input type="email" value="" placeholder="email" id="email">
 						<label for="email"></label>
 					</div>
@@ -152,6 +153,8 @@
 		const controlGroup = document.getElementsByClassName("control-group");
 		for (let i = 0; i < 2; i++) {
 			controlGroup.item(i).style.display = "inline-block";
+			controlGroup.item(i).style.marginBottom = "0";
+			controlGroup.item(i).style.width = "125px";
 		}
 
 		function valid() {
