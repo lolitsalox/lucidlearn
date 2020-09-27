@@ -23,7 +23,7 @@
 		.register {
 			position: absolute;
 			width: 300px;
-			top: calc(50% - 149.88px);
+			top: calc(50% - 216.44px);
 			left: calc(50% - 150px);
 		}
 
@@ -45,11 +45,11 @@
 		.control-group {
 			margin-bottom: 5px;
 		}
-		.control-group::placeholder {
+		.control-group > input::placeholder{
 			transition: opacity 0.5s ease-in-out;
 		}
 
-		.control-group:active::placeholder {
+		.control-group:active > input::placeholder {
 			opacity: 0;
 		}
 
@@ -84,7 +84,7 @@
 			transition: 0.25s;
 			display: block;
 			width: 250px;
-			margin: 0 auto;
+			margin: 20px auto 0 auto;
 			cursor: pointer;
 		}
 
@@ -121,7 +121,7 @@
 						<label for="last-name"></label>
 					</div>
 
-					<div class="control-group" style="margin: 20px 0;">
+					<div class="control-group" style="margin: 12.5px 0;">
 						<input type="email" value="" placeholder="email" id="email">
 						<label for="email"></label>
 					</div>
