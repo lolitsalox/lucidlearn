@@ -13,23 +13,24 @@ const bcrypt = require("bcrypt");
 
 
 
-const db = new Client({
+const client = new Client({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
 });
 
-db.connect();
+client.connect();
 
-db.query("SELECT * FROM users", (err, res) => {
+client.query("SELECT * FROM users", (err, res) => {
     if (err) {
-        db.end();
+        client.end();
         throw err;
     }
     res.rows.forEach(row => {
         console.log(JSON.stringify(row, null, 4));
     });
+    client.end();
 });
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -39,27 +40,20 @@ app.get('/login', (req, res) => res.sendFile(path.join(__dirname, '/public/Login
 app.get('/register', (req, res) => res.sendFile(path.join(__dirname, '/public/Register/index.html')));
 app.get('/arc-sw.js', (req, res) => res.sendFile(path.join(__dirname, '/public/Login/arc-sw.js')));
 
-app.get('/db', (req, res) => {
-    db.query("SELECT * FROM users", (err, res_) => {
-        if (err) {
-            db.end();
-            throw err;
-        }
-        let rows = [];
-        res_.rows.forEach(row => {
-            rows.push(JSON.stringify(row, null, 4));
-        });
-        res.send(`<h1>${rows.join('\n')}</h1>`);
-    });
-});
-
 async function generateID() {
     let id;
     try {
-        let result = await db.query({text: "SELECT id FROM users", rowMode: "array"});
+        const client = new Client({
+            connectionString: process.env.DATABASE_URL,
+            ssl: {
+                rejectUnauthorized: false
+            }
+        });
+        let result = await client.query({text: "SELECT id FROM users", rowMode: "array"});
         do {
             id = Math.random() * 10**18;
         } while (result.rows.includes(id) || `${id}`.length != 18);
+        client.end();
         return id;
     } catch (err) {
         console.log(err);
@@ -68,22 +62,39 @@ async function generateID() {
 
 async function userWith(field, value) {
     try {
-        const result = await db.query("SELECT id FROM users WHERE $1=$2", [field, value]);
+        const client = new Client({
+            connectionString: process.env.DATABASE_URL,
+            ssl: {
+                rejectUnauthorized: false
+            }
+        });
+        const result = await client.query("SELECT id FROM users WHERE $1=$2", [field, value]);
         console.log(result.rows, result.rowCount);
-        return result.rowCount > 0;
+        client.end();
+        return result.rows.length > 0;
     } catch (err) {
         console.log(err);
     };
 }
 
 app.get("/validate", (request, response) => {
-    db.query("SELECT * FROM users WHERE username=$1 and password=$2", [request.query.username, request.query.password], (err, res) => {
-        if (err) throw err;
-        if (res.rowCount > 0) { // MAKE SURE THE REQUEST IS COMING FROM lucidlearn.tk/register lucidlearn.tk/validate
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
+    client.query("SELECT * FROM users WHERE username=$1 and password=$2", [request.query.username, request.query.password], (err, res) => {
+        if (err) {
+            client.end();
+            throw err;
+        };
+        if (res.rowCount > 0) {
             response.send("sup bitch how ya doin'");
         } else {
             response.send("who you");
         }
+        client.end();
     });
 });
 app.post("/create_user", async (request, response) => { // lucidlearn.tk/user_with
@@ -101,18 +112,26 @@ app.post("/create_user", async (request, response) => { // lucidlearn.tk/user_wi
     if (await userWith("username", inputUsername)) {
         return response.status(403).json({"error": "This username is already in use!"})
     };
+    
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
 
     bcrypt.hash(inputPassword, 12, (err, hashed) => {
         if (err) {
             console.log(err);
             return response.sendStatus(500);
         }
-        db.query("INSERT INTO users (id, first_name, last_name, email, username, password) VALUES ($1, $2, $3, $4, $5, $6)", [id, inputFirstName, inputLastName, inputEmail, inputUsername, hashed], (err, res) => {
+        client.query("INSERT INTO users (id, first_name, last_name, email, username, password) VALUES ($1, $2, $3, $4, $5, $6)", [id, inputFirstName, inputLastName, inputEmail, inputUsername, hashed], (err, res) => {
             if (err) {
                 console.log(err.stack);
                 response.sendStatus(403);
             }
             else response.sendStatus(200);
+            client.end();
         });
     });
 });
