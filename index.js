@@ -34,13 +34,11 @@ db.query("SELECT * FROM users", (err, res) => {
 
 function generateID() {
     var id;
-    db.query({text: "SELECT id FROM users", rowMode: "array"}, (err, res, id) => {
-        if (err) console.log(err.stack);
-        else {
-            do {
-                id = Math.random() * 10**18;
-            } while (res.rows.includes(id) || `${id}`.length != 18);
-        }
+    db.query({text: "SELECT id FROM users", rowMode: "array"}, (err, res) => {
+        if (err) return console.log(err.stack);
+        do {
+            id = Math.random() * 10**18;
+        } while (res.rows.includes(id) || `${id}`.length != 18);
     });
     return id;
 };
