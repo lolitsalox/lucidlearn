@@ -39,7 +39,7 @@ function generateID() {
             let id;
             do {
                 id = Math.random() * 10**18;
-            } while (res.rows.includes(id));
+            } while (res.rows.includes(id) || id.toString.length != 18);
             console.log(id);
             return id;
         }
