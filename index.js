@@ -68,7 +68,7 @@ async function generateID() {
 
 async function userWith(field, value) {
     try {
-        const result = await db.query("SELECT email FROM users WHERE email='roiesholet@gmail.com'", [field, value]);
+        const result = await db.query("SELECT email FROM users WHERE email='roiesholet@gmail.com");
         console.log(result.rows);
         return result.rowCount > 0;
     } catch (err) {
