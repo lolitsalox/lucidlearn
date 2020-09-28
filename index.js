@@ -32,18 +32,6 @@ db.query("SELECT * FROM users", (err, res) => {
     });
 });
 
-function generateID() {
-    let id;
-    function callback(err, res) {
-        if (err) return console.log(err.stack);
-        do {
-            id = Math.random() * 10**18;
-        } while (res.rows.includes(id) || `${id}`.length != 18);
-    }
-    db.query({text: "SELECT id FROM users", rowMode: "array"}, callback);
-    return id;
-};
-
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
@@ -72,6 +60,10 @@ function userWith(field, input) {
     });
 }
 
+function generateID() {
+    return Math.random() * 10**18;
+}
+
 app.get("/validate", (request, response) => {
     db.query("SELECT * FROM users WHERE username=$1 and password=$2", [request.query.username, request.query.password], (err, res) => {
         if (err) throw err;
@@ -88,15 +80,22 @@ app.post("/create_user", (request, response) => { // lucidlearn.tk/user_with
     inputEmail = request.query["email"],
     inputUsername = request.query["username"],
     inputPassword = request.query["password"];
+    let id = generateID();
+
+    if (userWith("id", id)) {
+        do {
+            id = generateID();
+        } while (userWith(id, id) || `${id}`.length != 18);
+    };
 
     if (userWith("email", inputEmail)) return response.json({"error": "This email is already in use!"});
     else if (userWith("username", inputUsername)) return response.json({"error": "This username is already in use!"});
 
     bcrypt.hash(inputPassword, 12, (err, hashed) => {
-        db.query("INSERT INTO users (id, first_name, last_name, email, username, password) VALUES ($1, $2, $3, $4, $5, $6)", [generateID(), inputFirstName, inputLastName, inputEmail, inputUsername, hashed], (err, res) => {
+        db.query("INSERT INTO users (id, first_name, last_name, email, username, password) VALUES ($1, $2, $3, $4, $5, $6)", [id, inputFirstName, inputLastName, inputEmail, inputUsername, hashed], (err, res) => {
             if (err) {
                 console.log(err.stack);
-                response.sendStatus(500);
+                response.sendStatus(403);
             }
             else response.sendStatus(200);
         });
