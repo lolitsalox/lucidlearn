@@ -33,8 +33,8 @@ db.query("SELECT * FROM users", (err, res) => {
 });
 
 function generateID() {
-    let id;
-    db.query({text: "SELECT id FROM users", rowMode: "array"}, (err, res) => {
+    var id;
+    db.query({text: "SELECT id FROM users", rowMode: "array"}, (err, res, id) => {
         if (err) console.log(err.stack);
         else {
             do {
