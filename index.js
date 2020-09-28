@@ -33,13 +33,14 @@ db.query("SELECT * FROM users", (err, res) => {
 });
 
 function generateID() {
-    var id;
     db.query({text: "SELECT id FROM users", rowMode: "array"}, (err, res) => {
         if (err) return console.log(err.stack);
+        let id;
         do {
             id = Math.random() * 10**18;
         } while (res.rows.includes(id) || `${id}`.length != 18);
     });
+    console.log(id);
     return id;
 };
 
