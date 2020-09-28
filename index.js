@@ -36,11 +36,11 @@ function generateID() {
     db.query({text: "SELECT id FROM users", rowMode: "array"}, (err, res) => {
         if (err) console.log(err.stack);
         else {
-            let id;
+            var id;
             do {
                 id = Math.random() * 10**18;
-                console.log(id);
             } while (res.rows.includes(id) || `${id}`.length != 18);
+            console.log(id);
             return id;
         }
     });
