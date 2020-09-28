@@ -94,7 +94,10 @@ app.post("/create_user", (request, response) => { // lucidlearn.tk/user_with
 
     bcrypt.hash(inputPassword, 12, (err, hashed) => {
         db.query("INSERT INTO users (id, first_name, last_name, email, username, password) VALUES ($1, $2, $3, $4, $5, $6)", [generateID(), inputFirstName, inputLastName, inputEmail, inputUsername, hashed], (err, res) => {
-            if (err) console.log(err.stack);
+            if (err) {
+                console.log(err.stack);
+                response.sendStatus(500);
+            }
             else response.sendStatus(200);
         });
     });
