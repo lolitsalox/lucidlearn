@@ -33,17 +33,14 @@ db.query("SELECT * FROM users", (err, res) => {
 });
 
 function generateID() {
-    var id = [];
-    db.query({text: "SELECT id FROM users", rowMode: "array"}, (err, res) => {
+    let id = db.query({text: "SELECT id FROM users", rowMode: "array"}, (err, res) => {
         if (err) return console.log(err.stack);
-        let shizza;
         do {
-            shizza = Math.random() * 10**18;
-            id.push(shizza);
-        } while (res.rows.includes(id[id.length-1]) || `${id[id.length-1]}`.length != 18);
+            id = Math.random() * 10**18;
+        } while (res.rows.includes(id) || `${id}`.length != 18);
+        return id;
     });
-    console.log(id[id.length-1]);
-    return id[id.length-1];
+    return id;
 };
 
 app.use(express.static(path.join(__dirname, "public")));
