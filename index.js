@@ -38,8 +38,9 @@ function generateID() {
         else {
             let id;
             do {
-                id = Math.random() * 19;
+                id = Math.random() * 10**18;
             } while (res.rows.includes(id));
+            console.log(id);
             return id;
         }
     });
