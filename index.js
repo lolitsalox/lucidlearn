@@ -56,7 +56,7 @@ app.get('/db', (req, res) => {
 async function generateID() {
     let id;
     try {
-        let result = await db.query({text: "SELECT id FROM users", rowMode: "array"}, [id]);
+        let result = await db.query({text: "SELECT id FROM users", rowMode: "array"});
         do {
             id = Math.random() * 10**18;
         } while (result.rows.includes(id) || `${id}`.length != 18);
