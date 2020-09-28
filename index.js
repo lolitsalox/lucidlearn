@@ -53,15 +53,23 @@ app.get('/db', (req, res) => {
     });
 });
 
-function userWith(field, input) {
-    db.query("SELECT * FROM users WHERE $1=$2", [field, input], (err, res) => {
-        if (err) throw err;
-        else return res.rowCount > 0;
-    });
+async function generateID() {
+    let id;
+    let result;
+    try {
+        result = await db.query({text: "SELECT id FROM users", rowMode: "array"}, [id]);
+    } catch (err) {
+        console.log(err);
+    }
+    do {
+        id = Math.random() * 10**18;
+    } while (result.rows.includes(id) || `${id}`.length != 18);
+    return id;
 }
 
-function generateID() {
-    return Math.random() * 10**18;
+async function userWith(field, value) {
+    const result = await db.query("SELECT * FROM users WHERE $1=$2", [field, value]);
+    return result.rowCount > 0;
 }
 
 app.get("/validate", (request, response) => {
@@ -74,28 +82,26 @@ app.get("/validate", (request, response) => {
         }
     });
 });
-app.post("/create_user", (request, response) => { // lucidlearn.tk/user_with
+app.post("/create_user", async (request, response) => { // lucidlearn.tk/user_with
     const inputFirstName = request.query["first-name"],
     inputLastName = request.query["last-name"],
     inputEmail = request.query["email"],
     inputUsername = request.query["username"],
     inputPassword = request.query["password"];
-    let id = generateID();
+    const id = await generateID();
 
-    if (userWith("id", id)) {
-        do {
-            id = generateID();
-        } while (userWith(id, id) || `${id}`.length != 18);
-    };
-
-    if (userWith("email", inputEmail)) {
+    if (await userWith("email", inputEmail)) {
         return response.status(403).json({"error": "This email is already in use!"});
     }
-    else if (userWith("username", inputUsername)) {
+    else if (await userWith("username", inputUsername)) {
         return response.status(403).json({"error": "This username is already in use!"})
     };
 
     bcrypt.hash(inputPassword, 12, (err, hashed) => {
+        if (err) {
+            console.log(err);
+            return response.sendStatus(500);
+        }
         db.query("INSERT INTO users (id, first_name, last_name, email, username, password) VALUES ($1, $2, $3, $4, $5, $6)", [id, inputFirstName, inputLastName, inputEmail, inputUsername, hashed], (err, res) => {
             if (err) {
                 console.log(err.stack);
