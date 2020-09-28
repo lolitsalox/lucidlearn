@@ -88,8 +88,12 @@ app.post("/create_user", (request, response) => { // lucidlearn.tk/user_with
         } while (userWith(id, id) || `${id}`.length != 18);
     };
 
-    if (userWith("email", inputEmail)) return response.json({"error": "This email is already in use!"});
-    else if (userWith("username", inputUsername)) return response.json({"error": "This username is already in use!"});
+    if (userWith("email", inputEmail)) {
+        return response.status(403).json({"error": "This email is already in use!"});
+    }
+    else if (userWith("username", inputUsername)) {
+        return response.status(403).json({"error": "This username is already in use!"})
+    };
 
     bcrypt.hash(inputPassword, 12, (err, hashed) => {
         db.query("INSERT INTO users (id, first_name, last_name, email, username, password) VALUES ($1, $2, $3, $4, $5, $6)", [id, inputFirstName, inputLastName, inputEmail, inputUsername, hashed], (err, res) => {
