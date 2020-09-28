@@ -69,7 +69,7 @@ async function generateID() {
 async function userWith(field, value) {
     try {
         const result = await db.query("SELECT $1 FROM users WHERE $1='$2'", [field, value]);
-        return result.row.length > 0;
+        return result.rows.length > 0;
     } catch (err) {
         console.log(err);
     };
