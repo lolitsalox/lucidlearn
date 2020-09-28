@@ -55,21 +55,24 @@ app.get('/db', (req, res) => {
 
 async function generateID() {
     let id;
-    let result;
     try {
-        result = await db.query({text: "SELECT id FROM users", rowMode: "array"}, [id]);
+        let result = await db.query({text: "SELECT id FROM users", rowMode: "array"}, [id]);
+        do {
+            id = Math.random() * 10**18;
+        } while (result.rows.includes(id) || `${id}`.length != 18);
+        return id;
     } catch (err) {
         console.log(err);
     }
-    do {
-        id = Math.random() * 10**18;
-    } while (result.rows.includes(id) || `${id}`.length != 18);
-    return id;
 }
 
 async function userWith(field, value) {
-    const result = await db.query("SELECT * FROM users WHERE $1=$2", [field, value]);
-    return result.rowCount > 0;
+    try {
+        const result = await db.query("SELECT * FROM users WHERE $1=$2", [field, value]);
+        return result.rowCount > 0;
+    } catch (err) {
+        console.log(err);
+    };
 }
 
 app.get("/validate", (request, response) => {
