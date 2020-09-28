@@ -68,7 +68,7 @@ async function generateID() {
 
 async function userWith(field, value) {
     try {
-        const result = await db.query("SELECT $1 FROM users WHERE $1=$2", [field, value]);
+        const result = await db.query("SELECT $1 FROM users WHERE $1 = $2", [field, value]);
         return result.rowCount > 0;
     } catch (err) {
         console.log(err);
@@ -96,6 +96,7 @@ app.post("/create_user", async (request, response) => { // lucidlearn.tk/user_wi
     if (await userWith("email", inputEmail)) {
         return response.status(403).json({"error": "This email is already in use!"});
     }
+
     if (await userWith("username", inputUsername)) {
         return response.status(403).json({"error": "This username is already in use!"})
     };
