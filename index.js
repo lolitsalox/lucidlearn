@@ -9,12 +9,12 @@ const {
     wakeDyno
 } = require('heroku-keep-awake');
 const bcrypt = require("bcrypt");
-
+const cookieParser = require("cookie-parser");
 
 
 
 const pool = new Pool({
-    connectionString: "postgres://dzmnmictdmtiaa:cbb90ed9cb8a3d088a862ef4da189c3d4e2602482e1796defb36bdd246638e17@ec2-52-212-157-46.eu-west-1.compute.amazonaws.com:5432/d12iq76ibvcs0d",
+    connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
@@ -32,12 +32,60 @@ const pool = new Pool({
     }
 })().catch(err => console.log(err.stack));
 
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+
+async function validateCookie(req, res, next) {
+    const {cookies} = req;
+    if ("session_id" in cookies) {
+        const client = await pool.connect();
+        try {
+            const result = await client.query("SELECT session_id FROM cookies WHERE session_id = $1", [cookies.session_id]);
+            if (result.rows.length) {
+                const client1 = await pool.connect();
+                try {
+                    const newCookie = generateCookieID();
+                    await client1.query("UPDATE cookies SET session_id = $2 WHERE session_id = $1", [cookies.session_id, newCookie]);
+                    res.cookie("session_id", newCookie);
+                    next();
+                } catch (err) {
+                    console.log(err);
+                } finally {
+                    client1.release();
+                }
+            }
+        } catch (err) {
+            console.log(err);
+        } finally {
+            client.release();
+        }
+    }
+}
+
+
+app.get('/', validateCookie, (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, '/public/Login/index.html')));
-app.get('/register', (req, res) => res.sendFile(path.join(__dirname, '/public/Register/index.html')));
+app.get('/register', (req, res) => res.sendFile(path.join(__dirname, '/public/Register/index.html'))); // we stopped at cookie with validating;
 app.get('/arc-sw.js', (req, res) => res.sendFile(path.join(__dirname, '/public/Login/arc-sw.js')));
+
+
+async function generateCookieID() {
+    const client = await pool.connect();
+    try {
+        let id;
+        const result = await client.query({text: "SELECT session_id FROM cookies", rowMode: "array"});
+        do {
+            id = Math.random() * 10**18;
+        } while (result.rows.includes(id) || `${id}`.length != 18);
+        return id;
+    } catch (err) {
+        console.log(err);
+    } finally {
+        client.release();
+    }
+}
+
 
 async function generateID() {
     const client = await pool.connect();
@@ -68,14 +116,27 @@ async function userWith(field, value) {
     }
 }
 
+
 app.post("/validate", async (request, response) => {
     const client = await pool.connect();
     try {
         const res = await client.query(`SELECT password FROM users WHERE ${Object.keys(request.query)[0]} = $1`, [request.query[Object.keys(request.query)[0]]]);
         if (res.rows.length) {
-            bcrypt.compare(request.query.password, res.rows[0]["password"], (err, same) => {
+            bcrypt.compare(request.query.password, res.rows[0]["password"], async (err, same) => {
                 if (same) {
-                    response.status(200).send("success");
+                    const client1 = await pool.connect();
+                    try {
+                        const newCookie = generateCookieID();
+                        response.cookie("session_id", newCookie, {maxAge: 31556952000});
+                        response.status(200).send("success");
+                        await client1.query("BEGIN");
+                        await client1.query("INSERT INTO cookies (session_id) VALUES ($1)", [newCookie]);
+                        await client1.query("COMMIT");
+                    } catch (err) {
+                        console.log(err);
+                    } finally {
+                        client1.release();
+                    }
                 } else {
                     response.status(401).send("error1");
                 }

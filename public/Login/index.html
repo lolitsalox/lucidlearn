@@ -139,6 +139,9 @@
 				if (xreq.readyState == 4) {
 					if (xreq.response == "success") {
 						alert("Logged in!");
+						setTimeout(() => {
+							window.location.href = window.location.origin;
+						}, 3000);
 					} else if (xreq.response == "error0") {
 						alert("Invalid username or email!") 
 					} else if (xreq.response == "error1") {
