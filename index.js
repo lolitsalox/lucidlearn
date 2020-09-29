@@ -109,7 +109,7 @@ app.post("/create_user", async (request, response) => { // lucidlearn.tk/user_wi
         return response.status(403).json({"error": "This email is already in use!"});
     }
 
-    if (await userWith("username", inputUsername)) {
+    else if (await userWith("username", inputUsername)) {
         return response.status(403).json({"error": "This username is already in use!"})
     };
     
