@@ -130,19 +130,29 @@
 	</body>
 	<script>
 		function valid() {
-			const inputUsername = username.value,
+			const inputWhatever = username.value,
 				inputPassword = password.value;
 			
 			const xreq = new XMLHttpRequest();
 
-			xreq.open("post", `https://lucidlearn.tk/validate?username=${inputUsername}&password=${inputPassword}`);
-			
 			xreq.onreadystatechange = () => {
-				if (xreq.readyState == 4 && xreq.status == 200) {
-					console.log(xreq.responseText);
+				if (xreq.readyState == 4) {
+					if (xreq.response == "success") {
+						alert("Logged in!");
+					} else if (xreq.response == "error0") {
+						alert("Invalid username or email!") 
+					} else if (xreq.response == "error1") {
+						alert("Invalid password!") 
+					} else alert(xreq.response)
 				}
 			};
 
+			if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputWhatever)) {
+				xreq.open("post", `${window.location.origin}/validate?email=${inputWhatever}&password=${inputPassword}`, true);
+			} else {
+				xreq.open("post", `${window.location.origin}/validate?username=${inputWhatever}&password=${inputPassword}`, true);
+			}
+			
 			xreq.send();
 		};
 	</script>

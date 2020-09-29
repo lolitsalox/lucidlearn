@@ -160,12 +160,12 @@
 				inputEmail = document.getElementById("email").value;
 
 				
-			if (!(/[A-Za-zא-ת]{2,12}/.test(inputFirstName.trim()))) {
+			if (!(/[א-ת]{2,12}/.test(inputFirstName.trim()))) {
 				alert("Invalid first name!");
 				return;
 			}
 
-			if (!(/[A-Za-zא-ת]{2,12}/.test(inputLastName.trim()))) {
+			if (!(/[א-ת]{2,12}/.test(inputLastName.trim()))) {
 				alert("Invalid last name!");
 				return;
 			}
@@ -187,17 +187,21 @@
 			
 
 			const xreq = new XMLHttpRequest();
-			xreq.open("post", `${window.location.origin}/create_user?first-name=${inputFirstName}&last-name=${inputLastName}&username=${inputUsername}&password=${inputPassword}&email=${inputEmail}`);
 			xreq.onreadystatechange = () => {
-				if (this.readyState == 4) {
-					if (this.status == 200) {
-						console.log(this.responseText);
+				if (xreq.readyState == 4) {
+					if (xreq.status == 200) {
+						if (xreq.response == "success") alert("Signed up!")
 					}
 					else {
-						console.log(`[${this.status}]: ${this.responseText}`);
+						if (xreq.response == "error0") {
+							alert("A user with this email already exists!")
+						} else if (xreq.response == "error1") {
+							alert("This username is taken!")
+						}
 					}
 				}
 			};
+			xreq.open("POST", `${window.location.origin}/create_user?first-name=${inputFirstName}&last-name=${inputLastName}&username=${inputUsername}&password=${inputPassword}&email=${inputEmail}`, true);
 			xreq.send();
 
 
