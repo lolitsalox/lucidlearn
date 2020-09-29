@@ -105,11 +105,14 @@ app.post("/create_user", async (request, response) => { // lucidlearn.tk/user_wi
     inputPassword = request.query["password"];
     const id = await generateID();
 
-    if (await userWith("email", inputEmail)) {
+    const emailAlreadyExists = await userWith("email", inputEmail);
+    const usernameAlreadyExists = await userWith("username", inputUsername);
+
+    if (emailAlreadyExists) {
         return response.status(403).json({"error": "This email is already in use!"});
     }
 
-    else if (await userWith("username", inputUsername)) {
+    else if (usernameAlreadyExists) {
         return response.status(403).json({"error": "This username is already in use!"})
     };
     
