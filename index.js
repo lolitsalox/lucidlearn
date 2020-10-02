@@ -154,12 +154,22 @@ app.post("/validate", async (request, response) => {
                     try {
                         const newCookie = await generateCookie();
                         const oldCookie = request.cookies.cookie;
+                        if (oldCookie == undefined) {
+                            response.cookie("cookie", newCookie, {maxAge: 315576000000});
+                            await client1.query("BEGIN");
+                            await client1.query("UPDATE users SET cookie = $1 WHERE cookie = NULL", [newCookie]);
+                            await client1.query("COMMIT");
+                            console.log(`NULL ${newCookie} validate`);
+                            response.send("success");
+                            return;
+                        } else {
                         response.cookie("cookie", newCookie, {maxAge: 315576000000});
                         await client1.query("BEGIN");
                         await client1.query("UPDATE users SET cookie = $1 WHERE cookie = $2", [newCookie, oldCookie]);
                         await client1.query("COMMIT");
                         console.log(`${oldCookie} ${newCookie} validate`);
                         response.send("success");
+                        }
                     } catch (err) {
                         console.log(err);
                         await client1.query("ROLLBACK");
