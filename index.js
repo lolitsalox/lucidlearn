@@ -154,10 +154,10 @@ app.post("/validate", async (request, response) => {
                     try {
                         const newCookie = await generateCookie();
                         const oldCookie = request.cookies.cookie;
-                        if (oldCookie == null) {
-                            response.cookie("cookie", newCookie, {maxAge: 315576000000});
+                        if (oldCookie == null) { // need to check if the cookie in the database is equal to null but this expression does not work
+                            response.cookie("cookie", newCookie, {maxAge: 315576000000}); // check if the rows of the cookie = null is bigger than 1 if it is then give a new cookie and set a new cookie in the database
                             await client1.query("BEGIN");
-                            await client1.query("UPDATE users SET cookie = $1 WHERE cookie = NULL", [newCookie]); // if the cookie is a null it wont let you log in
+                            await client1.query("UPDATE users SET cookie = $1 WHERE cookie = NULL", [newCookie]); // if the cookie is a null in the database it wont work
                             await client1.query("COMMIT");
                             console.log(`NULL ${newCookie} validate`);
                             response.send("success");
