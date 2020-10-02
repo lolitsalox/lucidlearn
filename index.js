@@ -10,6 +10,7 @@ const {
 } = require('heroku-keep-awake');
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
+const { response } = require('express');
 
 
 
@@ -36,18 +37,21 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 
+app.get('/home', (req, res) => res.sendFile(path.join(__dirname, '/public/indexnotcookie.html')));
+
 async function validateCookie(req, res, next) {
-    const {cookies} = req;
-    if ("session_id" in cookies) {
+    const {cookies} = await req;
+    if ("cookie" in cookies) {
         const client = await pool.connect();
         try {
-            const result = await client.query("SELECT session_id FROM cookies WHERE session_id = $1", [cookies.session_id]);
+            const result = await client.query("SELECT cookie FROM users WHERE cookie = $1", [cookies.cookie]);
             if (result.rows.length) {
                 const client1 = await pool.connect();
                 try {
-                    const newCookie = generateCookieID();
-                    await client1.query("UPDATE cookies SET session_id = $2 WHERE session_id = $1", [cookies.session_id, newCookie]);
-                    res.cookie("session_id", newCookie);
+                //    const newCookie = await generateCookie();
+                //    console.log(`${cookies.cookie} ${newCookie} /home`);
+                //    await client1.query("UPDATE users SET cookie = $2 WHERE cookie = $1", [newCookie, cookies.cookie]); // why does it need to make a new cookie when its only validating, if you wouldn't make a new cookie it would've worked
+                //    res.cookie("cookie", newCookie, {maxAge: 315576000000});
                     next();
                 } catch (err) {
                     console.log(err);
@@ -60,24 +64,46 @@ async function validateCookie(req, res, next) {
         } finally {
             client.release();
         }
+    } else {
+        res.redirect('/home');
     }
 }
 
 
-app.get('/', validateCookie, (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
-app.get('/login', (req, res) => res.sendFile(path.join(__dirname, '/public/Login/index.html')));
-app.get('/register', (req, res) => res.sendFile(path.join(__dirname, '/public/Register/index.html'))); // we stopped at cookie with validating;
+app.get('/', validateCookie, async (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/indexcookie.html'));
+});
+app.get('/login', async (req, res) => {
+    const {cookies} = await req;
+    if ("cookie" in cookies) {
+        const client = await pool.connect();
+        try {
+            const result = await client.query({text: "SELECT cookie FROM users WHERE cookie = $1", rowMode: "array"}, [cookies.cookie]);
+            if (result.rows.length) {
+                res.redirect('/');
+                return;
+            }
+        } catch (err) {
+            console.log(err);
+        } finally {
+            client.release();
+        }
+        
+    }
+    res.sendFile(path.join(__dirname, '/public/Login/index.html'));
+});
+app.get('/register', (req, res) => res.sendFile(path.join(__dirname, '/public/Register/index.html')));
 app.get('/arc-sw.js', (req, res) => res.sendFile(path.join(__dirname, '/public/Login/arc-sw.js')));
 
 
-async function generateCookieID() {
+async function generateCookie() {
     const client = await pool.connect();
     try {
         let id;
-        const result = await client.query({text: "SELECT session_id FROM cookies", rowMode: "array"});
+        const result = await client.query("SELECT cookie FROM users");
         do {
-            id = Math.random() * 10**18;
-        } while (result.rows.includes(id) || `${id}`.length != 18);
+            id = Math.random() * 10**12;
+        } while (id == result.cookie || `${id}`.length != 12);
         return id;
     } catch (err) {
         console.log(err);
@@ -93,8 +119,8 @@ async function generateID() {
         let id;
         const result = await client.query({text: "SELECT id FROM users", rowMode: "array"});
         do {
-            id = Math.random() * 10**18;
-        } while (result.rows.includes(id) || `${id}`.length != 18);
+            id = parseInt(Math.random() * 10**12);
+        } while (result.rows.includes(id) || `${id}`.length != 12);
         return id;
     } catch (err) {
         console.log(err);
@@ -126,14 +152,17 @@ app.post("/validate", async (request, response) => {
                 if (same) {
                     const client1 = await pool.connect();
                     try {
-                        const newCookie = generateCookieID();
-                        response.cookie("session_id", newCookie, {maxAge: 31556952000});
-                        response.status(200).send("success");
+                        const newCookie = await generateCookie();
+                        const oldCookie = request.cookies.cookie;
+                        response.cookie("cookie", newCookie, {maxAge: 315576000000});
                         await client1.query("BEGIN");
-                        await client1.query("INSERT INTO cookies (session_id) VALUES ($1)", [newCookie]);
+                        await client1.query("UPDATE users SET cookie = $1 WHERE cookie = $2", [newCookie, oldCookie]);
                         await client1.query("COMMIT");
+                        console.log(`${oldCookie} ${newCookie} validate`);
+                        response.send("success");
                     } catch (err) {
                         console.log(err);
+                        await client1.query("ROLLBACK");
                     } finally {
                         client1.release();
                     }
@@ -157,7 +186,7 @@ app.post("/create_user", async (request, response) => { // lucidlearn.tk/user_wi
     inputEmail = request.query["email"],
     inputUsername = request.query["username"],
     inputPassword = request.query["password"];
-    const id = await generateID();
+    const id = await generateID(), cookie = await generateCookie();
 
     const emailAlreadyExists = await userWith("email", inputEmail);
     const usernameAlreadyExists = await userWith("username", inputUsername);
@@ -176,10 +205,10 @@ app.post("/create_user", async (request, response) => { // lucidlearn.tk/user_wi
             return response.sendStatus(500);
         }
         const client = await pool.connect();
-        const query = {text: "INSERT INTO users (id, first_name, last_name, email, username, password) VALUES ($1, $2, $3, $4, $5, $6)"};
+        const query = {text: "INSERT INTO users (id, first_name, last_name, email, username, password, cookie) VALUES ($1, $2, $3, $4, $5, $6, $7)"};
         try {
             await client.query("BEGIN");
-            await client.query(query, [id, inputFirstName, inputLastName, inputEmail, inputUsername, hashed]);
+            await client.query(query, [id, inputFirstName, inputLastName, inputEmail, inputUsername, hashed, cookie]);
             await client.query("COMMIT");
             return response.status(200).send("success");
         } catch (err) {

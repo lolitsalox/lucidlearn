@@ -53,6 +53,7 @@
 		input:focus::placeholder {
 			opacity: 0;
 		}
+
 		input {
 			text-align: center;
 			background-color: #ECF0F1;
@@ -112,7 +113,8 @@
 
 				<div class="login-form">
 					<div class="control-group">
-						<input type="text" class="login-field" value="" placeholder="שם משתמש או אימייל" id="username"> <!-- check if the person puts an email inside and then if he does make the request url to be valid to the email-->
+						<input type="text" class="login-field" value="" placeholder="שם משתמש או אימייל" id="username">
+						<!-- check if the person puts an email inside and then if he does make the request url to be valid to the email-->
 						<label class="login-field-icon fui-user" for="username"></label>
 					</div>
 
@@ -132,30 +134,29 @@
 		function valid() {
 			const inputWhatever = username.value,
 				inputPassword = password.value;
-			
+
 			const xreq = new XMLHttpRequest();
 
 			xreq.onreadystatechange = () => {
 				if (xreq.readyState == 4) {
 					if (xreq.response == "success") {
-						alert("Logged in!");
-						setTimeout(() => {
-							window.location.href = window.location.origin;
-						}, 3000);
+						window.location = window.location.origin;
 					} else if (xreq.response == "error0") {
-						alert("Invalid username or email!") 
+						alert("Invalid username or email!");
 					} else if (xreq.response == "error1") {
-						alert("Invalid password!") 
-					} else alert(xreq.response)
+						alert("Invalid password!");
+					} else alert(xreq.response);
 				}
 			};
 
 			if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputWhatever)) {
-				xreq.open("post", `${window.location.origin}/validate?email=${inputWhatever}&password=${inputPassword}`, true);
+				xreq.open("post", `${window.location.origin}/validate?email=${inputWhatever}&password=${inputPassword}`,
+				true);
 			} else {
-				xreq.open("post", `${window.location.origin}/validate?username=${inputWhatever}&password=${inputPassword}`, true);
+				xreq.open("post", `${window.location.origin}/validate?username=${inputWhatever}&password=${inputPassword}`,
+					true);
 			}
-			
+
 			xreq.send();
 		};
 	</script>
